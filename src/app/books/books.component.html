@@ -1,0 +1,18 @@
+<hr>
+<div class="row">
+    <div class="col-md-6 col-lg-4" *ngFor="let listing of bookService.items | async; let i = index" [routerLink]="['/book', listing.slug]">
+        <div class="d-flex flex-row">
+            <img src="{{listing.images[0]}}" class="img">
+        </div>
+        <hr>
+        <div class="d-flex flex-row">
+            <h4>{{ listing.name | limitString:15 }}<br>
+            <small class="text-muted" *ngFor="let course of listing.courses | limitFor:2; let i = index">{{course.name}}{{course.id}}{{listing.courses[i + 1] ? ', ' : ''}}</small>
+            </h4>
+            <h4 class="ml-auto align-self-center">${{listing.price}}
+            <small class="text-danger" *ngIf="listing.lastPrice && listing.price != listing.lastPrice"><s>${{listing.lastPrice}}</s></small>
+            </h4>
+        </div>
+        <hr>
+    </div>
+</div>

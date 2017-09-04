@@ -1,0 +1,92 @@
+<div class="row">
+  <div class="col-sm-12 col-lg-6">
+    <img src="{{ (book | async)?.images[currentPhoto] }}" alt="" class="img img-thumbnail">
+
+    <div class="d-flex flex-row mt-4">
+      <div class="mr-2" *ngFor="let image of (book | async)?.images; let i = index">
+          <img src="{{image}}" alt="" class="img img-preview border" (click)="currentPhoto = i" [ngClass]="currentPhoto == i ? 'border-dark': 'border-light'">
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-lg-6">
+
+    <h1 class='display-4 mb-4'>
+      {{ (book | async)?.name }}
+    </h1>
+    <h1 class='mb-4'>
+      ${{ (book | async)?.price }} 
+      <small class="text-danger" *ngIf="(book | async)?.lastPrice && (book | async)?.price != (book | async)?.lastPrice"><del>${{(book | async)?.lastPrice}}</del></small>
+    </h1>
+
+    <button type="button" class="btn btn-success form-control" *ngIf="(book | async)?.user != (auth.isAuthenticated())?.uid" (click)="onCheckout(form)">Purchase</button>
+    <button type="button" class="btn btn-primary form-control" *ngIf="(book | async)?.user == (auth.isAuthenticated())?.uid" routerLink="edit">Edit Listing</button>
+
+    <h6 class="mt-4">Description:</h6>
+    <p class="text-description">{{ (book | async)?.description }}</p>
+    <h6>Courses:</h6>
+    <span class="badge badge-primary p-2 mr-2" *ngFor="let course of (book | async)?.courses">{{course.name}}{{course.id}}</span>
+    <hr>
+    <h6 class="mb-1">Seller:</h6>
+    <h4 class="text-muted">{{ seller | async }}</h4>
+  </div>
+</div>
+
+<ng-template let-d="dismiss" #form>
+    <div class="modal-header">
+      <h4 class="modal-title">Checkout</h4>
+      <button type="button" class="close" aria-label="Close" (click)="d('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="row mb-4 justify-content-center">
+        <div class="col-sm-2"><img src="{{ (book | async)?.images[0] }}" alt="" class="img img-preview"></div>
+        <div class="col-sm-6"><h4 class="mb-0">{{(book | async)?.name}}</h4><p class="mt-0 text-muted">Seller: {{ seller | async }}</p></div>
+        <div class="col-sm-2 align-self-center"><h3 class="text-right">${{(book | async)?.price}}</h3></div>
+      </div>
+      <form action="." #f="ngForm">
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
+              <input type="text" name="firstName" class="form-control" placeholder="First Name" ngModel required>
+            </div>
+            <div class="col-sm-6">
+                <input type="text" name="lastName" class="form-control" placeholder="Last Name" ngModel required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <input type="text" name="address" class="form-control" placeholder="Address" ngModel required>
+        </div>
+
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
+              <input type="text" name="city" class="form-control" placeholder="City" ngModel required>
+            </div>
+            <div class="col-sm-6">
+              <input type="text" name="region" class="form-control" placeholder="Province, State, Region" ngModel required>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="row">
+            <div class="col-sm-6">
+              <input type="text" name="country" class="form-control" placeholder="Country" ngModel required>
+            </div>
+            <div class="col-sm-6">
+              <input type="text" name="postalCode" class="form-control" placeholder="Postal Code, Zip" ngModel required>
+            </div>
+          </div>
+        </div>
+        <hr>
+        <button class="btn btn-success form-control" type="button" [disabled]="f.invalid">Send Request</button>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <p class="text-muted"></p>
+    </div>
+</ng-template>

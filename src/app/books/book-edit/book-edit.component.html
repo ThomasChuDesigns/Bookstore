@@ -1,0 +1,44 @@
+<form [formGroup]="editForm" (ngSubmit)="onSubmit()">
+  <h3 class="mb-4">{{ editMode ? 'Edit Listing' : 'New Listing'}}</h3>
+  <div class="form-group">
+    <label for="">Name:</label>
+    <input type="text" class="form-control" placeholder="Textbook Name" formControlName="name">
+  </div>
+  <div class="form-group" formArrayName="images">
+    <label for="">Images:</label>
+    <div class="form-group d-flex flex-row" *ngFor="let image of editForm.get('images'); let i = index">
+      <input type="text" class="p-2 mr-1 form-control" placeholder="Image Path" [formControlName]="i">
+      <button type="button" class="btn btn-danger" (click)="onDeleteImage(i)"><i class="fa fa-remove"></i></button>
+    </div>
+    <button type="button" class="btn btn-success" (click)="onAddImage()">Add Image</button>
+  </div>
+  <div class="form-group" formArrayName="courses">
+    <label for="">Courses:</label>
+    <div class="form-group d-flex flex-row" *ngFor="let course of editForm.get('courses'); let i = index" [formGroupName]="i">
+      <input type="text" class="p-2 mr-1 form-control" placeholder="Course Name" formControlName="name">
+      <input type="number" class="p-2 mr-1 form-control" placeholder="Course Number" formControlName="id">
+      <button type="button" class="btn btn-danger" (click)="onDeleteCourse(i)"><i class="fa fa-remove"></i></button>
+    </div>
+    <button type="button" class="btn btn-success" (click)="onAddCourse()">Add Courses</button>
+  </div>
+  <div class="form-group">
+    <label for="">Description:</label>
+    <textarea rows="10" class="form-control" formControlName="description" placeholder="Description"></textarea>
+  </div>
+
+  <div class="form-group mb-4">
+    <label for="">Paypal Email:</label>
+    <input type="text" class="p-2 mr-1 form-control" placeholder="Paypal Email" formControlName="email">
+  </div>
+
+  <div class="form-group">
+    <div class="input-group">
+      <span class="input-group-addon"><i class="p-1 fa fa-dollar"></i></span>
+      <input type="number" class="form-control" formControlName="price">
+    </div>
+    <small class="form-text text-muted" *ngIf="price.invalid && (price.dirty || price.touched)">Invalid Price!</small>
+  </div>
+
+  <button type="submit" class="btn btn-success" [disabled]="editForm.invalid">{{ editMode ? 'Edit Listing' : 'Add Listing'}}</button>
+  <button type="button" class="btn btn-danger" *ngIf="editMode" (click)="onDelete()">Delete Listing</button>
+</form>
